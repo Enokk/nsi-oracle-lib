@@ -1,0 +1,27 @@
+{
+  "name": "nsi-oracle-lib",
+  "version": "1.0.0",
+  "engines" : {
+    "node" : ">=6.9.1"
+  },
+  "description": "librerie personali per i DB in NSI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ventu88/nsi-oracle-lib.git"
+  },
+  "author": "m.venturi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ventu88/nsi-oracle-lib/issues"
+  },
+  "homepage": "https://github.com/Ventu88/nsi-oracle-lib#readme",
+  "dependencies": {
+    "async": "^2.6.2",
+    "dotenv": "^7.0.0",
+    "oracledb": "^3.1.2"
+  }
+}
