@@ -5,6 +5,3 @@ librerie oracle personali per i DB in NSI
 * DB_CONNECTION_USER
 * DB_CONNECTION_PASSWORD
 * DB_CONNECTION_STRING
-
-#### Per abilitare i log su DB, è necessaria la variabile di ambiente (.env);
-* LOG_PROCEDURE

@@ -179,48 +179,6 @@ function callTwoParamProcedure(name, param1, param2, callback) {
     );
 }
 
-function logError(source, message, callback) {
-    logSomething(
-        source,
-        `ERROR: ${message}`,
-        (err, result) => callback(err, result)
-    );
-}
-
-function logWarning(source, message, callback) {
-    logSomething(
-        source,
-        `WARNING: ${message}`,
-        (err, result) => callback(err, result)
-    );
-}
-
-function logInfo(source, message, callback) {
-    logSomething(
-        source,
-        `INFO: ${message}`,
-        (err, result) => callback(err, result)
-    );
-}
-
-function logSomething(source, message, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                invoker.twoParamProcedure(
-                    connection,
-                    process.env.LOG_PROCEDURE,
-                    source,
-                    message,
-                    (err, result) => callback(err, result)
-                );
-            }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
-
 module.exports.getAllFromTable = getAllFromTable;
 module.exports.getNullFieldFromTable = getNullFieldFromTable;
 module.exports.getSingleFieldEqualsValueFromTable = getSingleFieldEqualsValueFromTable;
@@ -231,8 +189,3 @@ module.exports.getYesterdayFieldFromTable = getYesterdayFieldFromTable;
 module.exports.callProcedure = callProcedure;
 module.exports.callOneParamProcedure = callOneParamProcedure;
 module.exports.callTwoParamProcedure = callTwoParamProcedure;
-if(process.env.LOG_PROCEDURE) {
-    module.exports.logError = logError;
-    module.exports.logWarning = logWarning;
-    module.exports.logInfo = logInfo;
-}
