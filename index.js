@@ -1,8 +1,8 @@
 require("dotenv").config();
 const async = require("async");
-const connectionGetter = require("./connection");
-const querier = require("./queries");
-const invoker = require("./procedures");
+const connectionGetter = require("./lib/connection");
+const querier = require("./lib/queries");
+const invoker = require("./lib/procedures");
 
 function getAllFromTable(table, callback) {
     async.waterfall([
