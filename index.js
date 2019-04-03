@@ -4,12 +4,63 @@ const connectionGetter = require("./lib/connection");
 const querier = require("./lib/queries");
 const invoker = require("./lib/procedures");
 
+function getQueryResult(query, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                querier.selectQuery(
+                    connection,
+                    query,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
+        }
+    );
+}
+
 function getAllFromTable(table, callback) {
     async.waterfall([
             connectionGetter.getConnection,
             (connection, callback) => {
                 querier.selectAllFromTable(
                     connection,
+                    table,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
+        }
+    );
+}
+
+function getSingleColumnFromTable(column, table, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                querier.selectSingleColumnFromTable(
+                    connection,
+                    column,
+                    table,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
+        }
+    );
+}
+
+function getDoubleColumnFromTable(column1, column2, table, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                querier.selectDoubleColumnFromTable(
+                    connection,
+                    column1,
+                    column2,
                     table,
                     (err, result) => callback(err, result)
                 );
@@ -179,7 +230,10 @@ function callTwoParamProcedure(name, param1, param2, callback) {
     );
 }
 
+module.exports.getQueryResult = getQueryResult;
 module.exports.getAllFromTable = getAllFromTable;
+module.exports.getSingleColumnFromTable = getSingleColumnFromTable;
+module.exports.getDoubleColumnFromTable = getDoubleColumnFromTable;
 module.exports.getNullFieldFromTable = getNullFieldFromTable;
 module.exports.getSingleFieldEqualsValueFromTable = getSingleFieldEqualsValueFromTable;
 module.exports.getSingleFieldStartWithValueFromTable = getSingleFieldStartWithValueFromTable;
