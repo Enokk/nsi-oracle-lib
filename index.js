@@ -3,6 +3,7 @@ const async = require("async");
 const connectionGetter = require("./lib/connection");
 const querier = require("./lib/queries");
 const invoker = require("./lib/procedures");
+const RichResult = require("./lib/model").RichResult;
 
 function getQueryResult(query, callback) {
     async.waterfall([
@@ -15,7 +16,7 @@ function getQueryResult(query, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -31,7 +32,7 @@ function getAllFromTable(table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -48,7 +49,7 @@ function getSingleColumnFromTable(column, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -66,7 +67,7 @@ function getDoubleColumnFromTable(column1, column2, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -83,7 +84,7 @@ function getNullFieldFromTable(field, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -101,7 +102,7 @@ function getSingleFieldEqualsValueFromTable(field, value, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -119,7 +120,7 @@ function getSingleFieldStartWithValueFromTable(field, value, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -137,7 +138,7 @@ function getSingleFieldLikeValueFromTable(field, value, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -157,7 +158,7 @@ function getDoubleFieldEqualsValueFromTable(field1, value1, field2, value2, tabl
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
@@ -174,7 +175,7 @@ function getYesterdayFieldFromTable(field, table, callback) {
                 );
             }
         ],(err, result) => {
-            callback(err, result)
+            callback(err, new RichResult(result))
         }
     );
 }
