@@ -3,6 +3,7 @@ const async = require("async");
 const connectionGetter = require("./lib/connection");
 const querier = require("./lib/queries");
 const invoker = require("./lib/procedures");
+const updater = require("./lib/updates");
 const RichResult = require("./lib/model").RichResult;
 
 function getQueryResult(query, callback) {
@@ -231,6 +232,46 @@ function callTwoParamProcedure(name, param1, param2, callback) {
     );
 }
 
+function updateSingleTableField(table, field, value, whereCondition, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                updater.updateSignleTableField(
+                    connection,
+                    table,
+                    field,
+                    value,
+                    whereCondition,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
+        }
+    );
+}
+
+function updateDoubleTableField(table, field1, value1, field2, value2, whereCondition, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                updater.updateDoubleTableField(
+                    connection,
+                    table,
+                    field1,
+                    value1,
+                    field2,
+                    value2,
+                    whereCondition,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
+        }
+    );
+}
+
 module.exports.getQueryResult = getQueryResult;
 module.exports.getAllFromTable = getAllFromTable;
 module.exports.getSingleColumnFromTable = getSingleColumnFromTable;
@@ -244,3 +285,5 @@ module.exports.getYesterdayFieldFromTable = getYesterdayFieldFromTable;
 module.exports.callProcedure = callProcedure;
 module.exports.callOneParamProcedure = callOneParamProcedure;
 module.exports.callTwoParamProcedure = callTwoParamProcedure;
+module.exports.updateSingleTableField = updateSingleTableField;
+module.exports.updateDoubleTableField = updateDoubleTableField;
