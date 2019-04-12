@@ -6,7 +6,7 @@ const invoker = require("./lib/procedures");
 const updater = require("./lib/updates");
 const RichResult = require("./lib/model").RichResult;
 
-function getStatementResult(statement, callback) {
+function getQueryResult(statement, callback) {
     async.waterfall([
             connectionGetter.getConnection,
             (connection, callback) => {
@@ -18,6 +18,22 @@ function getStatementResult(statement, callback) {
             }
         ],(err, result) => {
             callback(err, new RichResult(result))
+        }
+    );
+}
+
+function getStatementResult(statement, callback) {
+    async.waterfall([
+            connectionGetter.getConnection,
+            (connection, callback) => {
+                querier.executeStatement(
+                    connection,
+                    statement,
+                    (err, result) => callback(err, result)
+                );
+            }
+        ],(err, result) => {
+            callback(err, result)
         }
     );
 }
@@ -272,6 +288,7 @@ function updateDoubleTableField(table, field1, value1, field2, value2, whereCond
     );
 }
 
+module.exports.getQueryResult = getQueryResult;
 module.exports.getStatementResult = getStatementResult;
 module.exports.getAllFromTable = getAllFromTable;
 module.exports.getSingleColumnFromTable = getSingleColumnFromTable;
