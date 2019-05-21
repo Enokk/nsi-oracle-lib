@@ -6,301 +6,514 @@ const invoker = require("./lib/procedures");
 const updater = require("./lib/updates");
 const RichResult = require("./lib/model").RichResult;
 
-function getQueryResult(statement, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.executeStatement(
-                    connection,
-                    statement,
-                    (err, result) => callback(err, result)
-                );
+const services = {
+    getQueryResult: function (statement, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.executeStatement(
+                        connection,
+                        statement,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getStatementResult(statement, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.executeStatement(
-                    connection,
-                    statement,
-                    (err, result) => callback(err, result)
-                );
+    getStatementResult: function (statement, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.executeStatement(
+                        connection,
+                        statement,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-function getAllFromTable(table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectAllFromTable(
-                    connection,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getAllFromTable: function (table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectAllFromTable(
+                        connection,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getSingleColumnFromTable(column, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectSingleColumnFromTable(
-                    connection,
-                    column,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getAllFromTableSortedByField: function (table, field, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectAllFromTableSortedByField(
+                        connection,
+                        table,
+                        field,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getDoubleColumnFromTable(column1, column2, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectDoubleColumnFromTable(
-                    connection,
-                    column1,
-                    column2,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getAllFromTableSortedByFieldDesc: function (table, field, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectAllFromTableSortedByFieldDesc(
+                        connection,
+                        table,
+                        field,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getNullFieldFromTable(field, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectNullFieldFromTable(
-                    connection,
-                    field,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getSingleColumnFromTable: function (column, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleColumnFromTable(
+                        connection,
+                        column,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getSingleFieldEqualsValueFromTable(field, value, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectSingleFieldEqualsValueFromTable(
-                    connection,
-                    field,
-                    value,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getDoubleColumnFromTable: function (column1, column2, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectDoubleColumnFromTable(
+                        connection,
+                        column1,
+                        column2,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getSingleFieldStartWithValueFromTable(field, value, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectSingleFieldLikeValueFromTable(
-                    connection,
-                    field,
-                    value + "%",
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getNullFieldFromTable: function (field, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectNullFieldFromTable(
+                        connection,
+                        field,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getSingleFieldLikeValueFromTable(field, value, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectSingleFieldLikeValueFromTable(
-                    connection,
-                    field,
-                    value,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getNullFieldFromTableSortedByField: function (field, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectNullFieldFromTableSortedByField(
+                        connection,
+                        field,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getDoubleFieldEqualsValueFromTable(field1, value1, field2, value2, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectDoubleFieldEqualsValueFromTable(
-                    connection,
-                    field1,
-                    value1,
-                    field2,
-                    value2,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getNullFieldFromTableSortedByFieldDesc: function (field, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectNullFieldFromTableSortedByFieldDesc(
+                        connection,
+                        field,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function getYesterdayFieldFromTable(field, table, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                querier.selectYesterdayFieldFromTable(
-                    connection,
-                    field,
-                    table,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldEqualsValueFromTable: function (field, value, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldEqualsValueFromTable(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, new RichResult(result))
-        }
-    );
-}
+        );
+    },
 
-function callProcedure(name, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                invoker.procedure(
-                    connection,
-                    name,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldEqualsValueFromTableSortedByField: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldEqualsValueFromTableSortedByField(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-function callOneParamProcedure(name, param, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                invoker.oneParamProcedure(
-                    connection,
-                    name,
-                    param,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldEqualsValueFromTableSortedByFieldDesc: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldEqualsValueFromTableSortedByFieldDesc(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-function callTwoParamProcedure(name, param1, param2, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                invoker.twoParamProcedure(
-                    connection,
-                    name,
-                    param1,
-                    param2,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldStartWithValueFromTable: function (field, value, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTable(
+                        connection,
+                        field,
+                        value + "%",
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-function updateSingleTableField(table, field, value, whereCondition, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                updater.updateSignleTableField(
-                    connection,
-                    table,
-                    field,
-                    value,
-                    whereCondition,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldStartWithValueFromTableSortedByField: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTableSortedByField(
+                        connection,
+                        field,
+                        value + "%",
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-function updateDoubleTableField(table, field1, value1, field2, value2, whereCondition, callback) {
-    async.waterfall([
-            connectionGetter.getConnection,
-            (connection, callback) => {
-                updater.updateDoubleTableField(
-                    connection,
-                    table,
-                    field1,
-                    value1,
-                    field2,
-                    value2,
-                    whereCondition,
-                    (err, result) => callback(err, result)
-                );
+    getSingleFieldStartWithValueFromTableSortedByFieldDesc: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTableSortedByFieldDesc(
+                        connection,
+                        field,
+                        value + "%",
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
             }
-        ],(err, result) => {
-            callback(err, result)
-        }
-    );
-}
+        );
+    },
 
-module.exports.getQueryResult = getQueryResult;
-module.exports.getStatementResult = getStatementResult;
-module.exports.getAllFromTable = getAllFromTable;
-module.exports.getSingleColumnFromTable = getSingleColumnFromTable;
-module.exports.getDoubleColumnFromTable = getDoubleColumnFromTable;
-module.exports.getNullFieldFromTable = getNullFieldFromTable;
-module.exports.getSingleFieldEqualsValueFromTable = getSingleFieldEqualsValueFromTable;
-module.exports.getSingleFieldStartWithValueFromTable = getSingleFieldStartWithValueFromTable;
-module.exports.getSingleFieldLikeValueFromTable = getSingleFieldLikeValueFromTable;
-module.exports.getDoubleFieldEqualsValueFromTable = getDoubleFieldEqualsValueFromTable;
-module.exports.getYesterdayFieldFromTable = getYesterdayFieldFromTable;
-module.exports.callProcedure = callProcedure;
-module.exports.callOneParamProcedure = callOneParamProcedure;
-module.exports.callTwoParamProcedure = callTwoParamProcedure;
-module.exports.updateSingleTableField = updateSingleTableField;
-module.exports.updateDoubleTableField = updateDoubleTableField;
+    getSingleFieldLikeValueFromTable: function (field, value, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTable(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getSingleFieldLikeValueFromTableSortedByField: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTableSortedByField(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getSingleFieldLikeValueFromTableSortedByFieldDesc: function (field, value, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectSingleFieldLikeValueFromTableSortedByFieldDesc(
+                        connection,
+                        field,
+                        value,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getDoubleFieldEqualsValueFromTable: function (field1, value1, field2, value2, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectDoubleFieldEqualsValueFromTable(
+                        connection,
+                        field1,
+                        value1,
+                        field2,
+                        value2,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getDoubleFieldEqualsValueFromTableSortedByField: function (field1, value1, field2, value2, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectDoubleFieldEqualsValueFromTableSortedByField(
+                        connection,
+                        field1,
+                        value1,
+                        field2,
+                        value2,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getDoubleFieldEqualsValueFromTableSortedByFieldDesc: function (field1, value1, field2, value2, table, orderField, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectDoubleFieldEqualsValueFromTableSortedByFieldDesc(
+                        connection,
+                        field1,
+                        value1,
+                        field2,
+                        value2,
+                        table,
+                        orderField,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    getYesterdayFieldFromTable: function (field, table, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    querier.selectYesterdayFieldFromTable(
+                        connection,
+                        field,
+                        table,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, new RichResult(result))
+            }
+        );
+    },
+
+    callProcedure: function (name, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    invoker.procedure(
+                        connection,
+                        name,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
+            }
+        );
+    },
+
+    callOneParamProcedure: function (name, param, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    invoker.oneParamProcedure(
+                        connection,
+                        name,
+                        param,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
+            }
+        );
+    },
+
+    callTwoParamProcedure: function (name, param1, param2, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    invoker.twoParamProcedure(
+                        connection,
+                        name,
+                        param1,
+                        param2,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
+            }
+        );
+    },
+
+    updateSingleTableField: function (table, field, value, whereCondition, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    updater.updateSignleTableField(
+                        connection,
+                        table,
+                        field,
+                        value,
+                        whereCondition,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
+            }
+        );
+    },
+
+    updateDoubleTableField: function (table, field1, value1, field2, value2, whereCondition, callback) {
+        async.waterfall([
+                connectionGetter.getConnection,
+                (connection, callback) => {
+                    updater.updateDoubleTableField(
+                        connection,
+                        table,
+                        field1,
+                        value1,
+                        field2,
+                        value2,
+                        whereCondition,
+                        (err, result) => callback(err, result)
+                    );
+                }
+            ], (err, result) => {
+                callback(err, result)
+            }
+        );
+    }
+};
+
+module.exports = services;
